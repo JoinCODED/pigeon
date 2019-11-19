@@ -25,7 +25,7 @@ SECRET_KEY = '4y_d^35=*$0mel@-ozg3ihe2*(db(d9343n&l7@a4wv!s$sr(^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition

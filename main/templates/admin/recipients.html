@@ -1,0 +1,95 @@
+{% extends "admin/base_site.html" %}
+
+{% block branding %}
+<h1 id="site-name">Pigeon Headquarters</h1>
+{% endblock %}
+{% block content %}
+<h1>{{group.name}}</h1>
+<div id="toolbar">
+  <form id="changelist-search" method="get">
+    <div>
+      <label for="searchbar"><img src="/static/admin/img/search.svg" alt="Search"></label>
+      <input type="text" size="40" name="search" value="" id="searchbar" autofocus="">
+      <input type="submit" value="Search">
+
+
+    </div>
+  </form>
+  <div class="js-inline-admin-formset inline-group" id="Group_members-group" data-inline-type="tabular"
+    data-inline-formset="{&quot;name&quot;: &quot;#Group_members&quot;, &quot;options&quot;: {&quot;prefix&quot;: &quot;Group_members&quot;, &quot;addText&quot;: &quot;Add another Group-recipient relationship&quot;, &quot;deleteText&quot;: &quot;Remove&quot;}}">
+    <div class="tabular inline-related last-related">
+      <input type="hidden" name="Group_members-TOTAL_FORMS" value="10" id="id_Group_members-TOTAL_FORMS" autocomplete="off"><input
+        type="hidden" name="Group_members-INITIAL_FORMS" value="7" id="id_Group_members-INITIAL_FORMS"><input type="hidden"
+        name="Group_members-MIN_NUM_FORMS" value="0" id="id_Group_members-MIN_NUM_FORMS"><input type="hidden" name="Group_members-MAX_NUM_FORMS"
+        value="1000" id="id_Group_members-MAX_NUM_FORMS" autocomplete="off">
+      <fieldset class="module ">
+        <h2>Recipients</h2>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th class="original"></th>
+          <th>ID</th>
+          <th class="column-recipient required">Recipient
+          </th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for recipient in recipients %}
+        <tr class="form-row row1 has_original dynamic-Group_members">
+          <td class="original">
+          </td>
+          <td>
+            {{ recipient.id }}
+          </td>
+          <td class="field-recipient">
+            <strong>{{recipient.name}}</strong>
+          </td>
+          <td class="delete">
+            {% if group in recipient.groups.all %}
+            <form action="?page={{recipients.number}}&query={{group.id}}&search={{search}}" method='POST'>
+              {%csrf_token%}
+              <input type="hidden" name="recipient" value="{{recipient.id}}">
+              <input type="hidden" name="type" value="delete">
+              <input type="submit" value="Delete" style="background: #ba2121">
+            </form>
+            {% else %}
+            <form action="?page={{recipients.number}}&query={{group.id}}&search={{search}}" method='POST'>
+              {%csrf_token%}
+              <input type="hidden" name="recipient" value="{{recipient.id}}">
+              <input type="hidden" name="type" value="add">
+              <input type="submit" class="addlink" value="Add">
+            </form>
+
+
+            {%endif%}
+
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+    </fieldset>
+  </div>
+  <div class="pagination">
+    <span class="step-links">
+      {% if recipients.has_previous %}
+      <a href="?page=1&query={{group.id}}&search={{search}}">&laquo; first</a>
+      <a href="?page={{ recipients.previous_page_number }}&query={{group.id}}&search={{search}}">previous</a>
+      {% endif %}
+
+      <span class="current">
+        Page {{ recipients.number }} of {{ recipients.paginator.num_pages }}.
+      </span>
+
+      {% if recipients.has_next %}
+      <a href="?page={{ recipients.next_page_number }}&query={{group.id}}&search={{search}}">next</a>
+      <a href="?page={{ recipients.paginator.num_pages }}&query={{group.id}}&search={{search}}">last &raquo;</a>
+      {% endif %}
+    </span>
+  </div>
+</div>
+{% endblock %}
